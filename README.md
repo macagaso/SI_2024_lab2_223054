@@ -11,7 +11,7 @@ allItems е null (RuntimeException со порака "allItems list can't be nul
 allItems има елемент со null баркод (RuntimeException со порака "No barcode!"),
 allItems има елемент со невалиден баркод, валиден внес за цена, попуст.
 
-
+```java
 @Test
 void EveryBranchTest(){
     Item item_invalid_barcode = SILab2.createItem("Chocolate", "12hihi", 170, 0);
