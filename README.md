@@ -6,13 +6,66 @@
 ### Цикломатска комплексност
 Цикломатската комплексност=E(број на ребра)-N(број на јазли)+2 => 36-28+2=10 цикломатската комплексност е 10.
 ### Тест случаи според Every Branch критериум
-#### Test Case 1:  
-allItems е null, RuntimeException со порака "allItems list can't be null!". Програмата завршува после фрлениот исклучок.
-#### Test Case 2:  
-allItems има елемент со null баркод. Се фрла RuntimeException со порака "No barcode!". Програмата завршува после фрлениот исклучок.
-#### Test Case 3:  
-allItems има елемент со невалиден баркод. Се проверува секој знак од баркодот и се фрла RuntimeException со порака "Invalid character in item barcode!" на знакот кој е детектиран дека е невалиден.
-#### Test Case 4:  
-allItems содржи еден елемент со баркод 123 без попуст, и друг со баркод 023 со 0.1 попуст. Се пресметува вкупната  цена, па се споредува со payment 301. Вредноста е <= на payment, па функцијата враќа true.
-#### Test Case 5:  
-allItems содржи  еден елемент со баркод 023 и попуст од 0.1 и цена од 100, и друг со баркод 123 и цена од 300 без попуст. Се пресметува вкупната  цена, па се споредува со payment 301. Поради условот за намалување на 30 единици од сумата, функцијата враќа true.
+Проверки дали функцијата при различни внесови од корисникот се однесува правилно, пример  
+allItems е null (RuntimeException со порака "allItems list can't be null!"), 
+allItems има елемент со null баркод (RuntimeException со порака "No barcode!"),
+allItems има елемент со невалиден баркод, валиден внес за цена, попуст.
+
+@Test
+void EveryBranchTest(){
+    Item item_invalid_barcode = SILab2.createItem("Chocolate", "12hihi", 170, 0);
+    Item item_no_barcode = SILab2.createItem("Juice", null, 170, 0);
+    Item item_valid = SILab2.createItem("Strawberries", "872456729", 170, 0);
+    Item item_high_price_discount_starting_with_zero = SILab2.createItem("Bread", "012445789", 550, 0.1f);
+
+    RuntimeException ex;
+    ex = assertThrows(RuntimeException.class, () -> SILab2.checkCart(null, 0));
+    assertTrue(ex.getMessage().contains("allItems list can't be null!"));
+
+    ex = assertThrows(RuntimeException.class, () -> SILab2.checkCart(items(item_invalid_barcode), 0));
+    assertTrue(ex.getMessage().contains("Invalid character in item barcode!"));
+
+    ex = assertThrows(RuntimeException.class, () -> SILab2.checkCart(items(item_no_barcode), 0));
+    assertTrue(ex.getMessage().contains("No barcode!"));
+
+    assertEquals(true, SILab2.checkCart(items(item_valid), 300));
+    assertEquals(false, SILab2.checkCart(items(item_valid), 50));
+
+    assertTrue(SILab2.checkCart(items(item_high_price_discount_starting_with_zero), 1000));
+}
+
+
+### Тест случаи според Multiple Condition критериум
+Се проверуваат комбинациите FXX,TFX,TTF и TTT, поточно различните комбинации на услови што се проверуваат во функцијата.
+Преку тестовите, се креира артикл со соодветни карактеристики и се проверува дали функцијата враќа соодветен резултат во зависност од состојбата на артиклот.
+
+@Test
+void MultipleConditionTest(){
+    //(item.getPrice() > 300 && item.getDiscount() > 0 && item.getBarcode().charAt(0) == '0')
+
+    // T && T && T
+    Item TTT = SILab2.createItem(null,"0876",530,0.1f);
+
+    assertTrue(TTT.getPrice() > 300);
+    assertTrue(TTT.getDiscount() > 0);
+    assertEquals('0', TTT.getBarcode().charAt(0));
+
+    // T && T && F
+    Item TTF = SILab2.createItem(null,"6070",580,0.1f);
+
+    assertTrue(TTF.getPrice() > 300);
+    assertTrue(TTF.getDiscount() > 0);
+    assertNotEquals('0', TTF.getBarcode().charAt(0));
+
+    // T && F...
+    Item TF = SILab2.createItem(null,"8929",580,0);
+
+    assertTrue(TF.getPrice() > 300);
+    assertFalse(TF.getDiscount() > 0);
+
+    // F ...
+    Item F = SILab2.createItem(null,"8929",9,0);
+
+    assertFalse(F.getPrice() > 300);
+}
+
