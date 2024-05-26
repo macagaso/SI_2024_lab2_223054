@@ -43,29 +43,24 @@ void EveryBranchTest(){
 ```java
 @Test
 void MultipleConditionTest(){
-    //(item.getPrice() > 300 && item.getDiscount() > 0 && item.getBarcode().charAt(0) == '0')
 
-    // T && T && T
     Item TTT = SILab2.createItem(null,"0876",530,0.1f);
 
     assertTrue(TTT.getPrice() > 300);
     assertTrue(TTT.getDiscount() > 0);
     assertEquals('0', TTT.getBarcode().charAt(0));
 
-    // T && T && F
     Item TTF = SILab2.createItem(null,"6070",580,0.1f);
 
     assertTrue(TTF.getPrice() > 300);
     assertTrue(TTF.getDiscount() > 0);
     assertNotEquals('0', TTF.getBarcode().charAt(0));
 
-    // T && F...
     Item TF = SILab2.createItem(null,"8929",580,0);
 
     assertTrue(TF.getPrice() > 300);
     assertFalse(TF.getDiscount() > 0);
 
-    // F ...
     Item F = SILab2.createItem(null,"8929",9,0);
 
     assertFalse(F.getPrice() > 300);
