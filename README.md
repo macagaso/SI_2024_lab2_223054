@@ -34,13 +34,13 @@ void EveryBranchTest(){
 
     assertTrue(SILab2.checkCart(items(item_high_price_discount_starting_with_zero), 1000));
 }
-
+```
 
 
 ### Тест случаи според Multiple Condition критериум
 Се проверуваат комбинациите FXX,TFX,TTF и TTT, поточно различните комбинации на услови што се проверуваат во функцијата.
 Преку тестовите, се креира артикл со соодветни карактеристики и се проверува дали функцијата враќа соодветен резултат во зависност од состојбата на артиклот.
-
+```java
 @Test
 void MultipleConditionTest(){
     //(item.getPrice() > 300 && item.getDiscount() > 0 && item.getBarcode().charAt(0) == '0')
@@ -70,4 +70,5 @@ void MultipleConditionTest(){
 
     assertFalse(F.getPrice() > 300);
 }
+```
 
